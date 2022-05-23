@@ -1,48 +1,41 @@
-#pass
 import numpy as np
 from numpy import *
 import time
 
-#LU dekompozice - zakladni metoda linalg.solve
+#Tvorba Matice
+m = int(input("Zadejte velikost matice: "))
+A = np.random.randint(1,100, size = (m,m))
+#print(A)
+b = np.random.randint(1,100, m)
+#print(b)
+
+#Gausova metoda 
 def gaus(A,b):
     x = np.linalg.solve(A, b)
     return x
 
-#Jacobiho metoda výpočtu matice 
-def jacobi(A,b,N=25,x=None):
-    # Create an initial guess if needed                                                                                                                                                            
+#Jacobiho metoda 
+def jacobi(A,b,N=25,x=None):                                                                                                                                                         
     if x is None:
-        x = zeros(len(A[0]))
-
-    # Create a vector of the diagonal elements of A                                                                                                                                                
-    # and subtract them from A                                                                                                                                                                     
+        x = zeros(len(A[0]))                                                                                                                                                                 
     D = diag(A)
-    R = A - diagflat(D)
-
-    # Iterate for N times                                                                                                                                                                          
+    R = A - diagflat(D)                                                                                                                                                                 
     for i in range(N):
         x = (b - dot(R,x)) / D
     return x
 
-# Matice + guess pro Jacobi   
-A = array([[2.0,1.0],[5.0,7.0]])
-b = array([11.0,13.0])
-
-#Výpočet Jacobi + čas
+#Výpočty + čas pro JACOBI
 j_start = time.perf_counter()
 jacobi = jacobi(A,b,N=25)
 j_end = time.perf_counter()
 j= j_end - j_start
 
-#Gaus výpočet + čas 
+#Výpočty + čas pro GAUS
 g_start = time.perf_counter()
 gaus = gaus(A,b)
 g_end = time.perf_counter()
 g = g_end - g_start
 
-#Výsledky 
-print(f"Matice levé strany {A}")
-print(f"Matice pravé strany {b}")
-print(f"Vyřešená matice pomocí Jacobiho metody: {jacobi} a čas pro výpočet: {j}")
+#Tisk výsledků
 print(f"Vyřešená matice pomocí Gausovi metody: {gaus} a čas pro výpočet: {g}")
-
+print(f"Vyřešená matice pomocí Jacobiho metody: {jacobi} a čas pro výpočet: {j}")
