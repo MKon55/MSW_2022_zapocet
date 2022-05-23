@@ -1,43 +1,41 @@
-#pass
 import numpy as np
-from numpy import array
-from scipy.linalg import lu
+from numpy import *
+import time
 
-#Gausova eliminační metoda:
-def gaus(a):
-    x = np.linalg.matrix_rank(a)
+#Tvorba Matice
+m = int(input("Zadejte velikost matice: "))
+A = np.random.randint(1,100, size = (m,m))
+#print(A)
+b = np.random.randint(1,100, m)
+#print(b)
+
+#Gausova metoda 
+def gaus(A,b):
+    x = np.linalg.solve(A, b)
     return x
 
-a = array([
-    [2,4,4,4],
-    [1,2,3,3],
-    [1,2,2,2],
-    [1,4,3,4]
-    ])
-
-pl, u = lu(a, permute_l=True)
-print(u)
-print(x)
-
-#Jacobiho metoda:
-def jacobi(A, b, niteraci, x0=np.ones(len(A))):
-    x = x0
-    D = np.diag(A)
-    L = np.tril(A, k = -1)
-    U = np.triu(A, k = 1)
-    for i in range(niteraci):
-        x = (b - np.matmul((L + U),x))/D
-        print("iterace:",i, "x=",x)
+#Jacobiho metoda 
+def jacobi(A,b,N=25,x=None):                                                                                                                                                         
+    if x is None:
+        x = zeros(len(A[0]))                                                                                                                                                                 
+    D = diag(A)
+    R = A - diagflat(D)                                                                                                                                                                 
+    for i in range(N):
+        x = (b - dot(R,x)) / D
     return x
 
-A = array([
-    [2,4,4,4],
-    [1,2,3,3],
-    [1,2,2,2],
-    [1,4,3,4]
-    ])
-b = np.array([11, 13])
+#Výpočty + čas pro JACOBI
+j_start = time.perf_counter()
+jacobi = jacobi(A,b,N=25)
+j_end = time.perf_counter()
+j= j_end - j_start
 
-x = jacobi(A, b, 10)
-print("reseni: ", x)
+#Výpočty + čas pro GAUS
+g_start = time.perf_counter()
+gaus = gaus(A,b)
+g_end = time.perf_counter()
+g = g_end - g_start
 
+#Tisk výsledků
+print(f"Vyřešená matice pomocí Gausovi metody: {gaus} a čas pro výpočet: {g}")
+print(f"Vyřešená matice pomocí Jacobiho metody: {jacobi} a čas pro výpočet: {j}")
