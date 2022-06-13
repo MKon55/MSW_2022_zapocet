@@ -14,11 +14,11 @@ def rk4(f, y, h):
 # Lotkuv -Volterruv model , r rust, D extinkce ,
 # prvni prvek pole korist , druhy predator
 def lv_pp(y):
-    r = np.array([0.5,0.1]) #argumenty rx a ry => růstové koeficienty
-    D = np.array([0.1,0.3]) #hodnoty Dx a Dy => extinční keoficienty
+    r = np.array([1.2,0.03]) #argumenty rx a ry => růstové koeficienty
+    D = np.array([0.05,0.6]) #hodnoty Dx a Dy => extinční keoficienty
     return np.array([r[0]*y[0] - D[0]*y[0]*y[1],r[1]*y[0]*y[1] - D[1]*y[1]])
 
-# definujeme delku casoveho kroku , pocet kroku , pocatecni velikost populaci
+#Definice => delka časového kroku, počet kroku, početeční populace 
 h = 0.01
 kroky_max = 9999
 krok = 0
@@ -29,7 +29,7 @@ y = np.array([8.,2.]) # pocetecní hodnoty 2 => kořist a 1 => predator
 korist_pole[krok] = y[0]
 predator_pole[krok] = y[1]
 
-# integrujeme pomoci rk4, ukladame do pole
+#Integrace pomocí pomoci rk4 + uložení do pole 
 while krok < kroky_max:
     y = rk4(lv_pp,y,h)
     krok += 1
@@ -37,7 +37,7 @@ while krok < kroky_max:
     predator_pole[krok] = y[1]
     cas_pole[krok] = krok*h
 
-# vykreslim casovou zavislost
+#Vykreslení časové závilosti 
 koristplot , = plt.plot(cas_pole ,korist_pole ,'r',linewidth=2,label='korist')
 predatorplot , = plt.plot(cas_pole ,predator_pole ,'b',linewidth=2,label='predator')
 plt.xlabel('cas')
