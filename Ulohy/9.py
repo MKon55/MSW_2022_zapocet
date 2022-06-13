@@ -1,23 +1,9 @@
 #Porovnání výsledků přes Analitickou a Numerickou integraci
-
+import numpy as np
 from numpy import *
-from scipy.integrate import quad
+from scipy import integrate
 
-#Analitická integrace poze pomocí math
-def polynomial_analitical_f(lower, upper): 
-    return (((upper**3)/3)- (upper**2) + 6*upper) - (((lower**3)/3)- (lower**2) + 6*lower)
-
-def harmonic_analitical_f(lower, upper):
-    return (-cos(2*upper)) - (-cos(2*lower))
-
-def logarithm_analitical_f(lower, upper):
-    return (upper * log(4*upper) - (upper/2)) - (lower * log(4*lower) - (lower/2))
- 
-polynomial_analitical = polynomial_analitical_f(1,2)
-harmonic_analitical = harmonic_analitical_f(1,2)
-logarithm_analitical = logarithm_analitical_f(1,2)
-
-#Numerická integrace pomocí scipy
+#Funkce
 def polynomial_function(x):
     return x**2 - 2*x + 6
 
@@ -27,11 +13,28 @@ def harmonic_function(x):
 def logarithm_function(x):
     return log(4*x) + (1/2)
 
-polynomial_numeric = quad(polynomial_function, 1, 2)
-harmonic_numeric = quad(harmonic_function, 1, 2)
-logarithm_numeric = quad(logarithm_function, 1, 2)
+#Metody výpočtu 
+def riemann_ctverec(funkce, a, b):
+    return integrate.quadrature(funkce, a ,b)
 
+def simpson(funkce, a, b, h=0.01):
+    return integrate.simpson(funkce(np.arange(a, b+h, h)), np.arange(a, b+h, h))
+
+def romberg(funkce, a, b):
+    return integrate.romberg(funkce, a, b)
+ 
 #Výsledky
-print(f"Výsledek pomocí analytické metody: {polynomial_analitical}, výsledek pomocí numerické metody: {polynomial_numeric}")
-print(f"Výsledek pomocí analytické metody: {harmonic_analitical}, výsledek pomocí numerické metody: {harmonic_numeric}")
-print(f"Výsledek pomocí analytické metody: {logarithm_analitical}, výsledek pomocí numerické metody: {logarithm_numeric}")
+print("Polynomická funkce")
+print(f"Riemann {riemann_ctverec(polynomial_function, 1, 2)[0]}")
+print(f"Simpson {simpson(polynomial_function, 1, 2)}")
+print(f"Romberg {romberg(polynomial_function, 1, 2)}")
+
+print("\nHarmonická funkce")
+print(f"Riemann {riemann_ctverec(harmonic_function, 1, 2)[0]}")
+print(f"Simpson {simpson(harmonic_function, 1, 2)}")
+print(f"Romberg {romberg(harmonic_function, 1, 2)}")
+
+print("\nLogaritmická funkce")
+print(f"Riemann {riemann_ctverec(logarithm_function, 1, 2)[0]}")
+print(f"Simpson {simpson(logarithm_function, 1, 2)}")
+print(f"Romberg {romberg(logarithm_function, 1, 2)}")
